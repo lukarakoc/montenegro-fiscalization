@@ -1,22 +1,22 @@
-# Montenegro Fiscal Service
+# Servisa za elektronsku fiskalizaciju - Crna Gora
 
-A Java library for integrating with Montenegro's fiscal service for invoice registration and fiscalization.
+Java (Spring Boot) biblioteka za integraciju sa fiskalnim servisom Poreske uprave Crne Gore za registraciju i fiskalizaciju računa.
 
-## Overview
+## Pregled
 
-This library provides a simple way to integrate with Montenegro's fiscal service for:
-- Registering regular invoices
-- Registering corrective invoices
-- Registering Tax Cash Registers (TCR)
-- Registering cash deposits
+Ova biblioteka pruža jednostavan način za integraciju sa crnogorskim fiskalnim servisom za:
+- Registraciju redovnih računa (faktura)
+- Storniranje redovnih računa
+- Registraciju fiskalnih kasa (ENU)
+- Registraciju depozita
 
-It handles all the complexities of creating SOAP requests, signing them with digital signatures, and processing the responses.
+Ona upravlja svim složenostima kreiranja SOAP zahtjeva, potpisivanja digitalnim potpisima i obrade odgovora.
 
-## Installation
+## Instalacija
 
-### Maven Dependency
+### Maven dependency
 
-Add the following dependency to your `pom.xml` file:
+Dodajte sljedeći dependency u vaš `pom.xml` fajl:
 
 ```xml
 <dependency>
@@ -26,41 +26,41 @@ Add the following dependency to your `pom.xml` file:
 </dependency>
 ```
 
-### Gradle Dependency
+### Gradle dependency
 
-Add the following dependency to your `build.gradle` file:
+Dodajte sljedeći dependency u vašu `build.gradle` fajl:
 
 ```groovy
 implementation 'com.montenegro:fiscal:0.0.1-SNAPSHOT'
 ```
 
-## Configuration
+## Konfiguracija
 
-Create an `application.yml` file in your project's `src/main/resources` directory with the following properties:
+Kreirajte `application.yml` datoteku u `src/main/resources` direktorijumu vašeg projekta sa sljedećim svojstvima:
 
 ```yaml
 fiscalization:
-  id-type: TIN                         # Type of identification (TIN)
-  pib: YOUR_PIB_NUMBER                 # Your tax identification number
-  company-name: YOUR_COMPANY_NAME      # Your company name
-  endpoint: https://efitest.tax.gov.me/fs-v1  # Endpoint URL (test or production)
+  id-type: TIN                         # Tip identifikacije (TIN)
+  pib: VAŠ_PIB_BROJ                    # Vaš poreski identifikacioni broj
+  company-name: IME_VAŠE_KOMPANIJE     # Ime vaše kompanije
+  endpoint: https://efitest.tax.gov.me/fs-v1  # Endpoint URL (test ili produkcija)
   keystore:
-    path: certs/your-certificate.pfx   # Path to your digital certificate
-    password: YOUR_KEYSTORE_PASSWORD   # Password for your digital certificate
-  business-unit-code: YOUR_BU_CODE     # Business unit code
-  tcr-code: YOUR_TCR_CODE              # Tax cash register code
-  soft-code: YOUR_SOFT_CODE            # Software code
-  validate-xml: true                   # Whether to validate XML against schema
-  operator-code: YOUR_OPERATOR_CODE    # Operator code
-  bank-account-number: YOUR_BANK_ACCOUNT  # Your bank account number
-  verification-url: https://efitest.tax.gov.me/  # URL for verification
+    path: certs/your-certificate.pfx   # Putanja do vašeg digitalnog sertifikata
+    password: LOZINKA_KEYSTORE-a       # Lozinka za vaš digitalni sertifikat
+  business-unit-code: KOD_POSLOVNE_JEDINICE  # Kod poslovne jedinice
+  tcr-code: KOD_ENU                    # Kod elektronskog naplatnog uređaja
+  soft-code: KOD_SOFTVERA              # Kod softvera
+  validate-xml: true                   # Da li validirati XML prema šemi
+  operator-code: KOD_OPERATERA         # Kod operatera
+  bank-account-number: VAŠ_BANKOVNI_RAČUN  # Vaš broj bankovnog računa
+  verification-url: https://efitest.tax.gov.me/  # URL za verifikaciju
 ```
 
-Replace the placeholder values with your actual information.
+Zamijenite placeholder vrijednosti sa vašim stvarnim informacijama.
 
-## Usage Examples
+## Primjeri Korišćenja
 
-### Registering a Regular Invoice
+### Registracija Redovnog Računa
 
 ```java
 import com.montenegro.fiscal.model.CreateInvoiceRequest;
@@ -84,50 +84,52 @@ public class InvoiceExample {
     }
 
     public FiscalizationResult registerRegularInvoice() {
-        // Create invoice items
+        // Kreiranje stavki računa
         InvoiceItem item1 = InvoiceItem.builder()
                 .code("ITEM001")
-                .name("Product 1")
+                .name("Proizvod 1")
                 .quantity(2)
-                .unit("pcs")
+                .unit("kom")
                 .unitPrice(new BigDecimal("10.00"))
                 .vatRate(new BigDecimal("21.00"))
                 .build();
 
         InvoiceItem item2 = InvoiceItem.builder()
                 .code("ITEM002")
-                .name("Service 1")
+                .name("Usluga 1")
                 .quantity(1)
-                .unit("hour")
+                .unit("sat")
                 .unitPrice(new BigDecimal("50.00"))
                 .vatRate(new BigDecimal("21.00"))
                 .build();
 
-        // Create buyer information (optional)
+        // Kreiranje informacija o kupcu
         BuyerType buyer = new BuyerType();
-        buyer.setName("Customer Name");
-        buyer.setAddress("Customer Address");
+        buyer.setIDType(IDTypeSType.TIN);
+        buyer.setIDNum("87654321");
+        buyer.setName("Ime Kupca");
+        buyer.setAddress("Adresa Kupca");
         buyer.setTown("Podgorica");
         buyer.setCountry(CountryCodeSType.ME);
 
-        // Create invoice request
+        // Kreiranje zahtjeva za račun
         CreateInvoiceRequest request = CreateInvoiceRequest.builder()
                 .invoiceType(InvoiceTSType.INVOICE)
                 .orderNumber(1)
-                .paymentMethod(PaymentMethodTypeSType.CARD)
+                .paymentMethod(PaymentMethodTypeSType.ACCOUNT)
                 .paymentDeadline(LocalDate.now().plusDays(15))
                 .buyer(buyer)
                 .items(List.of(item1, item2))
-                .note("Thank you for your business")
+                .note("Izmirite račun u roku od 15 dana.")
                 .build();
 
-        // Register invoice
+        // Registracija računa
         return fiscalizationService.registerInvoice(request);
     }
 }
 ```
 
-### Registering a Corrective Invoice
+### Registracija Korektivnog Računa
 
 ```java
 import com.montenegro.fiscal.model.CreateInvoiceRequest;
@@ -153,67 +155,78 @@ public class CorrectiveInvoiceExample {
     }
 
     public FiscalizationResult registerCorrectiveInvoice() {
-        // Create invoice items for the corrective invoice
+        // Kreiranje stavki računa za korektivni račun
         InvoiceItem item1 = InvoiceItem.builder()
                 .code("ITEM001")
-                .name("Product 1")
-                .quantity(1)  // Reduced quantity from original invoice
-                .unit("pcs")
+                .name("Proizvod 1")
+                .quantity(-1)  // Smanjena količina u odnosu na originalni račun
+                .unit("kom")
                 .unitPrice(new BigDecimal("10.00"))
                 .vatRate(new BigDecimal("21.00"))
                 .build();
 
-        // Reference to the original invoice
+        InvoiceItem item2 = InvoiceItem.builder()
+                .code("ITEM002")
+                .name("Usluga 1")
+                .quantity(-1)
+                .unit("sat")
+                .unitPrice(new BigDecimal("50.00"))
+                .vatRate(new BigDecimal("21.00"))
+                .build();
+      
+        // Referenca na originalni račun
         OriginalInvoice originalInvoice = new OriginalInvoice(
-                "ORIGINAL_INVOICE_ID",
-                LocalDateTime.now().minusDays(5)
+                "0AE36859887129D6363C40F662FF9AE4", // IIC originalnog računa
+                LocalDateTime.now().minusDays(5) // datum fiskalizacije originalnog računa
         );
 
-        // Create buyer information (should match original invoice)
+        // Kreiranje informacija o kupcu (treba da odgovara originalnom računu)
         BuyerType buyer = new BuyerType();
-        buyer.setName("Customer Name");
-        buyer.setAddress("Customer Address");
+        buyer.setIDType(IDTypeSType.TIN);
+        buyer.setIDNum("87654321");
+        buyer.setName("Ime Kupca");
+        buyer.setAddress("Adresa Kupca");
         buyer.setTown("Podgorica");
         buyer.setCountry(CountryCodeSType.ME);
 
-        // Create corrective invoice request
+        // Kreiranje zahtjeva za korektivni račun
         CreateInvoiceRequest request = CreateInvoiceRequest.builder()
                 .invoiceType(InvoiceTSType.CORRECTIVE)
-                .orderNumber(2)
-                .paymentMethod(PaymentMethodTypeSType.CARD)
+                .orderNumber(1)
+                .paymentMethod(PaymentMethodTypeSType.ACCOUNT)
                 .paymentDeadline(LocalDate.now().plusDays(15))
                 .buyer(buyer)
                 .items(List.of(item1))
-                .note("Correction for invoice ORIGINAL_INVOICE_ID")
-                .original(originalInvoice)  // Reference to original invoice
+                .note("Storniranje za račun ID_ORIGINALNOG_RAČUNA, kupac odustao od kupovine.")
+                .original(originalInvoice)  // Referenca na originalni račun
                 .build();
 
-        // Register corrective invoice
+        // Registracija korektivnog računa
         return fiscalizationService.registerInvoice(request);
     }
 }
 ```
 
-## Required Properties
+## Obavezna konfiguracija
 
-Before using the library, you need to set the following properties in your application.yml file:
+Prije korišćenja biblioteke, potrebno je postaviti sljedeće konfiguracije u vaš application.yml fajl:
 
-| Property | Description |
-|----------|-------------|
-| fiscalization.id-type | Type of identification (usually TIN) |
-| fiscalization.pib | Your tax identification number |
-| fiscalization.company-name | Your company name |
-| fiscalization.endpoint | Endpoint URL for the fiscal service |
-| fiscalization.keystore.path | Path to your digital certificate (.pfx file) |
-| fiscalization.keystore.password | Password for your digital certificate |
-| fiscalization.business-unit-code | Business unit code assigned by tax authority |
-| fiscalization.tcr-code | Tax cash register code assigned by tax authority |
-| fiscalization.soft-code | Software code assigned by tax authority |
-| fiscalization.validate-xml | Whether to validate XML against schema |
-| fiscalization.operator-code | Operator code assigned by tax authority |
-| fiscalization.bank-account-number | Your bank account number |
-| fiscalization.verification-url | URL for verification of invoices |
+| Konfiguracija                     | Opis |
+|-----------------------------------|------|
+| fiscalization.id-type             | Tip identifikacije (obično TIN) |
+| fiscalization.pib                 | Vaš poreski identifikacioni broj |
+| fiscalization.company-name        | Ime vaše kompanije |
+| fiscalization.endpoint            | Endpoint URL za fiskalni servis |
+| fiscalization.keystore.path       | Putanja do vašeg digitalnog sertifikata (.pfx datoteka) |
+| fiscalization.keystore.password   | Lozinka za vaš digitalni sertifikat |
+| fiscalization.business-unit-code  | Kod poslovne jedinice dodijeljen od poreske uprave |
+| fiscalization.tcr-code            | Kod elektronskog naplatnog uređaja dodijeljen od poreske uprave |
+| fiscalization.soft-code           | Kod softvera dodijeljen od poreske uprave |
+| fiscalization.validate-xml        | Da li validirati XML prema šemi |
+| fiscalization.operator-code       | Kod operatera dodijeljen od poreske uprave |
+| fiscalization.bank-account-number | Vaš broj bankovnog računa |
+| fiscalization.verification-url    | URL za verifikaciju računa |
 
-## License
+## Licenca
 
-This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
+Ovaj projekat je licenciran pod Apache License 2.0 - pogledajte LICENSE fajl za detalje.
