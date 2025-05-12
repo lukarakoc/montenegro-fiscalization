@@ -1,0 +1,15 @@
+fiscalization:
+  id-type: TIN
+  pib: 12345678
+  company-name: Test Company
+  endpoint: https://efitest.tax.gov.me/fs-v1
+  keystore:
+    path: certs/test.pfx
+    password: password
+  business-unit-code: yy280xs844
+  tcr-code: ff408pn101
+  soft-code: na085xc304
+  validate-xml: true
+  operator-code: jk732xh006
+  bank-account-number: 520-11112-12
+  verification-url: https://efitest.tax.gov.me/
