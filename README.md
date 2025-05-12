@@ -1,4 +1,4 @@
-# Servisa za elektronsku fiskalizaciju - Crna Gora
+# Servis za elektronsku fiskalizaciju - Crna Gora 🇲🇪
 
 Java (Spring Boot) biblioteka za integraciju sa fiskalnim servisom Poreske uprave Crne Gore za registraciju i fiskalizaciju računa.
 
