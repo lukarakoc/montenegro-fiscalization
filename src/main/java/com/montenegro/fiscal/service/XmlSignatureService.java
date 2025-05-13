@@ -21,9 +21,9 @@ import java.security.cert.X509Certificate;
 import java.util.Collections;
 
 /**
- * Service responsible for digitally signing XML documents using XML Digital Signature.
- * This service initializes the XML signature factory and loads the private key and certificate
- * from the configured keystore to be used for signing documents.
+ * Service responsible for digitally signing XML documents using XML Digital Signature. This service
+ * initializes the XML signature factory and loads the private key and certificate from the
+ * configured keystore to be used for signing documents.
  */
 @Component
 @RequiredArgsConstructor
@@ -35,8 +35,8 @@ public class XmlSignatureService {
   private X509Certificate certificate;
 
   /**
-   * Initializes the XML signature factory and loads the private key and certificate.
-   * This method is automatically called after the bean is constructed.
+   * Initializes the XML signature factory and loads the private key and certificate. This method is
+   * automatically called after the bean is constructed.
    */
   @PostConstruct
   public void init() {
@@ -46,9 +46,9 @@ public class XmlSignatureService {
   }
 
   /**
-   * Signs an XML document using XML Digital Signature.
-   * The method applies an enveloped signature to the document using SHA-256 for digesting
-   * and RSA-SHA256 for signing. The signature references the element with Id="Request".
+   * Signs an XML document using XML Digital Signature. The method applies an enveloped signature to
+   * the document using SHA-256 for digesting and RSA-SHA256 for signing. The signature references
+   * the element with Id="Request".
    *
    * @param document The XML document to be signed
    * @return The signed XML document

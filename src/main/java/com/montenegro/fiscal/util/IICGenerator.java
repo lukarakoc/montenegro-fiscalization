@@ -12,23 +12,22 @@ import java.util.Locale;
 import lombok.experimental.UtilityClass;
 
 /**
- * Utility class for generating Internal Invoice Code (IIC/IKOF).
- * This class provides functionality to generate a unique identifier for invoices
- * based on invoice data and digital signature.
+ * Utility class for generating Internal Invoice Code (IIC/IKOF). This class provides functionality
+ * to generate a unique identifier for invoices based on invoice data and digital signature.
  */
 @UtilityClass
 public class IICGenerator {
 
   /**
-   * Generates an Internal Invoice Code (IIC/IKOF) based on invoice data.
-   * The method creates a digital signature using the provided private key and invoice data,
-   * then generates an MD5 hash of the signature to create the IIC.
+   * Generates an Internal Invoice Code (IIC/IKOF) based on invoice data. The method creates a
+   * digital signature using the provided private key and invoice data, then generates an MD5 hash
+   * of the signature to create the IIC.
    *
-   * @param orderNumber The sequential number of the invoice
+   * @param orderNumber     The sequential number of the invoice
    * @param currentDateTime The date and time when the invoice was created
-   * @param props The fiscalization properties containing business information
-   * @param totalPrice The total price of the invoice
-   * @param privateKey The private key used for signing
+   * @param props           The fiscalization properties containing business information
+   * @param totalPrice      The total price of the invoice
+   * @param privateKey      The private key used for signing
    * @return An IicData object containing both the signature and the IIC
    * @throws RuntimeException If an error occurs during the generation process
    */

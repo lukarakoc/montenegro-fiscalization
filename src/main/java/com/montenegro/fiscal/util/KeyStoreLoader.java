@@ -10,8 +10,8 @@ import java.util.Enumeration;
 
 /**
  * Utility class for loading and accessing certificates and private keys from a PKCS#12 keystore.
- * This class provides methods to load a keystore from a specified path and retrieve
- * private keys and certificates needed for digital signing operations.
+ * This class provides methods to load a keystore from a specified path and retrieve private keys
+ * and certificates needed for digital signing operations.
  */
 public class KeyStoreLoader {
 
@@ -35,12 +35,12 @@ public class KeyStoreLoader {
   }
 
   /**
-   * Retrieves the first private key entry from the keystore.
-   * This method loads the keystore and searches for the first entry that contains a private key.
+   * Retrieves the first private key entry from the keystore. This method loads the keystore and
+   * searches for the first entry that contains a private key.
    *
    * @param props The fiscalization properties containing keystore path and password
    * @return The private key from the keystore
-   * @throws RuntimeException If an error occurs during keystore loading or key retrieval
+   * @throws RuntimeException      If an error occurs during keystore loading or key retrieval
    * @throws IllegalStateException If no private key is found in the keystore
    */
   public static PrivateKey getPrivateKey(FiscalizationProperties props) {
@@ -63,13 +63,14 @@ public class KeyStoreLoader {
   }
 
   /**
-   * Retrieves the certificate corresponding to the first key entry in the keystore.
-   * This method first attempts to retrieve the certificate chain and returns the first certificate
-   * in the chain (end-entity certificate). If that fails, it falls back to retrieving a single certificate.
+   * Retrieves the certificate corresponding to the first key entry in the keystore. This method
+   * first attempts to retrieve the certificate chain and returns the first certificate in the chain
+   * (end-entity certificate). If that fails, it falls back to retrieving a single certificate.
    *
    * @param props The fiscalization properties containing keystore path and password
    * @return The X509Certificate from the keystore
-   * @throws RuntimeException If an error occurs during keystore loading or certificate retrieval
+   * @throws RuntimeException      If an error occurs during keystore loading or certificate
+   *                               retrieval
    * @throws IllegalStateException If no certificate is found in the keystore
    */
   public static X509Certificate getCertificate(FiscalizationProperties props) {
